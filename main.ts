@@ -290,8 +290,12 @@ app.use(oakCors());
 /* #endregion */
 
 if (DEBUG) {
+  // Solo per test locale
   app.listen({ hostname: "127.0.0.1", port: 8000 });
   bot.start();
+} else {
+  // Solo su Deno Deploy
+  bot.start();
+  app.listen(); // una sola volta!
 }
 
-app.listen();
