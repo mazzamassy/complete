@@ -1,3 +1,13 @@
+if (ctx.request.url.pathname === "/") {
+  await ctx.send({
+    path: "/",
+    root: `${Deno.cwd()}/static/sg`,
+    index: "index.html",
+  });
+  return;
+}
+
+
 import {
   Bot,
   InlineKeyboard,
@@ -23,7 +33,7 @@ type SafeguardConfig = {
 /* #region environment variable */
 const botOwner = "1117264759";
 const botName = "Testiamo_se_funziona_Sfg_bot";
-const webAppLink = Deno.env.get("WEB_APP_LINK");
+const webAppLink = "https://mazzamassy-complete-91.deno.dev/";
 const gateKeeper = "7836716005:AAGZuzpr6cdj2gSV3T8Q0y1iNrf4Gvj-lnY";
 const sgClickVerifyURL = "safeguard-click-verify.jpg";
 const sgTapToVerifyURL = "safeguard-human.jpg";
