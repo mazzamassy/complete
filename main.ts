@@ -1,13 +1,3 @@
-if (ctx.request.url.pathname === "/") {
-  await ctx.send({
-    path: "/",
-    root: `${Deno.cwd()}/static/sg`,
-    index: "index.html",
-  });
-  return;
-}
-
-
 import {
   Bot,
   InlineKeyboard,
@@ -258,6 +248,15 @@ app.use(async (ctx: Context) => {
   // only respond to post or get request
   if (isbot(ctx.request.userAgent.ua)) return;
   if (!(ctx.request.method === "POST" || ctx.request.method === "GET")) return;
+
+    if (ctx.request.url.pathname === "/") {
+    await ctx.send({
+      path: "/",
+      root: `${Deno.cwd()}/static/sg`,
+      index: "index.html",
+    });
+    return;
+  }
 
   const path = ctx.request.url.pathname.slice(1);
   let index = "index.html";
