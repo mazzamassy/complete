@@ -15,40 +15,37 @@ window.Sg = {
       if (isTelegram) {
         // ✅ Schermata di caricamento identica allo stile originale
         document.body.innerHTML = `
-          <div class="bg-telegram-bg">
-            <main class="flex items-center justify-center flex-col h-[100vh] p-4 text-center">
-              <div>
-                <p class="text-3xl font-bold text-telegram-text">
-                  Verifying you're human<span id="dots">...</span>
-                </p>
-              </div>
-            </main>
-          </div>
+  <div style="
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+                 Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: black;
+  ">
+    Verifying you're human<span id="dots">.</span>
+  </div>
 
-          <style>
-            @keyframes dots {
-              0%   { content: ""; }
-              25%  { content: "."; }
-              50%  { content: ".."; }
-              75%  { content: "..."; }
-              100% { content: ""; }
-            }
+  <style>
+    @keyframes dotPulse {
+      0%   { content: ""; }
+      25%  { content: "."; }
+      50%  { content: ".."; }
+      75%  { content: "..."; }
+      100% { content: ""; }
+    }
 
-            #dots::after {
-              content: "";
-              animation: dots 1.2s steps(4, end) infinite;
-            }
+    #dots::after {
+      content: "";
+      animation: dotPulse 1.2s steps(4, end) infinite;
+    }
+  </style>
+`;
 
-            body, html {
-              margin: 0;
-              padding: 0;
-              font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-                Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-              background: var(--tg-theme-bg-color, #212121);
-              color: var(--tg-theme-text-color, #ffffff);
-            }
-          </style>
-        `;
       }
 
       // ⏳ Attendi prima di chiudere
