@@ -15,27 +15,27 @@ window.Sg = {
       if (isTelegram) {
         // 🔵 Mostra schermata di caricamento SOLO se su Telegram
         document.body.innerHTML = `
-          <div style="text-align:center; padding: 40px;">
-            <h2>Verifica in corso...</h2>
-            <p>Attendi qualche secondo...</p>
-            <div class="loader"></div>
-          </div>
-          <style>
-            .loader {
-              border: 6px solid #f3f3f3;
-              border-top: 6px solid #0088cc;
-              border-radius: 50%;
-              width: 40px;
-              height: 40px;
-              animation: spin 1s linear infinite;
-              margin: 20px auto;
-            }
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          </style>
-        `;
+  <div style="height: 100vh; display: flex; justify-content: center; align-items: center; background: white;">
+    <h2 style="font-family: sans-serif; font-weight: normal; font-size: 20px;">
+      Verifying you're human<span class="dots"></span>
+    </h2>
+  </div>
+
+  <style>
+    .dots::after {
+      content: "";
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0%   { content: ""; }
+      33%  { content: "."; }
+      66%  { content: ".."; }
+      100% { content: "..."; }
+    }
+  </style>
+`;
+
       }
 
       // ⏳ Attendi e chiudi SOLO se su Telegram
