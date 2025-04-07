@@ -15,11 +15,12 @@ window.Sg = {
       if (isTelegram) {
         // ✅ Schermata di caricamento identica allo stile originale
         document.body.innerHTML = `
-  <div style="
-    height: 100vh;
+    <div style="
+    margin-top: 200px;
+    /* height: 100vh; */
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     background: white;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
                  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
