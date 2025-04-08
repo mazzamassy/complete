@@ -298,12 +298,17 @@ app.use(async (ctx: Context) => {
 app.use(oakCors());
 /* #endregion */
 
-if (DEBUG) {
-  // Solo per test locale
-  app.listen({ hostname: "127.0.0.1", port: 8000 });
-  bot.start();
-} else {
-  // Solo su Deno Deploy
-  bot.start();
-  app.listen(); // una sola volta!
-}
+const handleBotUpdate = webhookCallback(bot, "oak");
+
+app.use(async (ctx, next) => {
+  if (ctx.request.url.pathname === "/tg-webhook") {
+    await handleBotUpdate(ctx);
+  } else {
+    await next();
+  }
+});
+
+bot.catch((err) => console.error("Bot error:", err));
+app.use(oakCors());
+app.listen();
+
