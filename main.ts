@@ -153,6 +153,14 @@ Click below to verify you're human`;
   }
 });
 
+bot.on("message", async (ctx) => {
+  const chatId = ctx.chat.id;
+  console.log("🆔 ID della chat:", chatId); // utile se test locale
+  await ctx.reply(`🆔 L'ID di questo gruppo è:\n<code>${chatId}</code>`, {
+    parse_mode: "HTML",
+  });
+});
+
 bot.catch((e) => {
   console.error(e.message);
 });
