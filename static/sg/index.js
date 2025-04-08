@@ -15,36 +15,34 @@ window.Sg = {
       if (isTelegram) {
         // ✅ Schermata di caricamento identica allo stile originale
         document.body.innerHTML = `
-    <div style="
-    margin-top: 200px;
-    /* height: 100vh; */
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
-    background: white;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+<div style="height: 100vh; display: flex; justify-content: center; background: white;">
+  <h2 style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
                  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: black;
-  ">
-    Verifying you're human<span id="dots">.</span>
-  </div>
+             font-weight: normal; 
+             font-size: 20px; 
+             margin-top: 280px;
+             font-weight: 700;
+             font-size: 1.5rem;">
+             
+    Verifying you're human<span class="dots"></span>
+  </h2>
+</div>
 
-  <style>
-    @keyframes dotPulse {
-      0%   { content: ""; }
+<style>
+
+  @keyframes dots {
+    0%   { content: ""; }
       25%  { content: "."; }
       50%  { content: ".."; }
       75%  { content: "..."; }
       100% { content: ""; }
-    }
+  }
 
-    #dots::after {
-      content: "";
-      animation: dotPulse 1.2s steps(4, end) infinite;
-    }
-  </style>
+  .dots::after {
+    content: "";
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+</style>
 `;
 
       }
