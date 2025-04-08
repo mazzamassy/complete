@@ -47,18 +47,19 @@ const app = new Application();
 // open web app
 bot.chatType("private").command("start", async (ctx) => {
   const msg = ctx.message?.text.split(" ");
-  if (msg?.length !== 2) return;
-  const id = msg[msg.length - 1];
+  const id = msg?.length === 2 ? msg[1] : "default"; // se non c'è, usa "default"
 
   const caption = `<b>Verify you're human with Safeguard Portal</b>
     
 Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safeguard.run/group-security/verification-issues"><i>Not working?</i></a>`;
+
   const sgClickVerify = await Deno.open("./safeguard-click-verify.jpg");
   const input = new InputFile(sgClickVerifyURL || sgClickVerify);
   const keyboard = new InlineKeyboard().webApp(
     "VERIFY",
-    (webAppLink as string) + "?c=" + id
+    `${webAppLink}?c=${id}`
   );
+
   await bot.api.raw.sendPhoto({
     caption,
     photo: input,
@@ -67,6 +68,7 @@ Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safegu
     reply_markup: keyboard,
   });
 });
+
 
 // setup for channel configuration
 bot.chatType("private").command("setup", async (ctx) => {
