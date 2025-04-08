@@ -20,7 +20,7 @@ window.Sg = {
                  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
              font-weight: normal; 
              font-size: 20px; 
-             margin-top: 280px;
+             margin-top: 180px;
              font-weight: 700;
              font-size: 1.5rem;">
              
