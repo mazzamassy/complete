@@ -321,5 +321,5 @@ app.use(async (ctx, next) => {
 
 bot.catch((err) => console.error("Bot error:", err));
 app.use(oakCors());
-app.listen();
-
+import { serve } from "https://deno.land/std@0.223.0/http/server.ts";
+serve(app.handle);
