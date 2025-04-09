@@ -1,0 +1,1 @@
+https://api.telegram.org/bot7734508293:AAHXJt9rNpDpObZoIXGww6e8kX9Y6oUHin8/setWebhook?url=https://mazzamassy-complete-91.deno.dev/tg-webhook
