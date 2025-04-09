@@ -55,10 +55,10 @@ Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safegu
 
   const sgClickVerify = await Deno.open("./safeguard-click-verify.jpg");
   const input = new InputFile(sgClickVerifyURL || sgClickVerify);
-  const keyboard = new InlineKeyboard().webApp(
-    "VERIFY",
-    `${webAppLink}?c=${id}`
-  );
+const keyboard = new InlineKeyboard().webApp(
+  "VERIFY",
+  `${webAppLink}?c=${id}_${Math.random().toString(36).substring(7)}`
+);
 
   await bot.api.raw.sendPhoto({
     caption,
