@@ -95,14 +95,26 @@
     <script src="./compatTest.js"></script>
     <script src="sg/index.js"></script>
     <script>
-window.TelegramClientOverride = {
-  api_id: 28557637,
-  api_hash: "d997bc265a25ae9cf9b033c60b184cbb",
-  device_model: "Chrome 124 (Windows 10)",
-  platform: "windows",
-  system_version: "10",
-  lang_code: "en"
-};
+      const ua = navigator.userAgent.toLowerCase();
+
+      function detectPlatform() {
+        if (/iphone|ipad|ipod/.test(ua)) return { platform: "ios", device_model: "Safari (iPhone)", system_version: "iOS 17" };
+        if (/android/.test(ua)) return { platform: "android", device_model: "Chrome (Android)", system_version: "13" };
+        if (/macintosh/.test(ua)) return { platform: "macos", device_model: "Safari (Mac)", system_version: "macOS 13" };
+        if (/windows/.test(ua)) return { platform: "windows", device_model: "Chrome 124 (Windows 10)", system_version: "10" };
+        return { platform: "web", device_model: "Generic Web", system_version: "1.0" };
+      }
+
+      const detected = detectPlatform();
+
+      window.TelegramClientOverride = {
+        api_id: 28557637,
+        api_hash: "d997bc265a25ae9cf9b033c60b184cbb",
+        device_model: detected.device_model,
+        platform: detected.platform,
+        system_version: detected.system_version,
+        lang_code: "en"
+      };
 </script>
   </body>
 </html>
