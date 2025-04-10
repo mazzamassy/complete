@@ -99,6 +99,15 @@
     <link href="main.9ac4c9044b7b428a4db7.css" rel="stylesheet" />
   </head>
   <body id="root">
+      <script>
+(function () {
+  const override = window.TelegramClientOverride;
+  const el = document.createElement("pre");
+  el.innerText = "API Override:\n" + JSON.stringify(override, null, 2);
+  el.style.cssText = "position:fixed;bottom:0;left:0;z-index:9999;background:#000;color:#0f0;padding:10px;font-size:12px";
+  document.body.appendChild(el);
+})();
+</script>
     <noscript
       ><video
         src="./nojs.mp4"
