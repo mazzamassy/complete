@@ -199,7 +199,7 @@ const newVerified = async (ctx: Context) => {
       const deno = await Deno.openKv();
       const entry = await deno.get([
         "channel",
-        "default" /*TODO: replace with unique id */,
+        "@SolanaSignalsPrivate" /*TODO: replace with unique id */,
       ]);
       const config = (entry.value || sgConfigDefault) as SafeguardConfig;
       const imageLink = sgVerifiedURL
