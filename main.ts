@@ -206,7 +206,14 @@ const newVerified = async (ctx: Context) => {
     const deno = await Deno.openKv();
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-    const imageLink = sgVerifiedURL ? new URL(sgVerifiedURL) : "./safeguard-verify.jpg";
+let imageLink: InputFile;
+
+if (sgVerifiedURL.startsWith("http")) {
+  imageLink = new InputFile(new URL(sgVerifiedURL));
+} else {
+  const file = await Deno.open(sgVerifiedURL);
+  imageLink = new InputFile(file);
+}
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
