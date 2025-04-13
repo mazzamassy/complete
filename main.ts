@@ -129,12 +129,17 @@ Click below to verify you're human`;
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
 
     const verifyDefault = await Deno.open("./safeguard-human.jpg");
-    const imageLink =
-      config.image !== ""
-        ? new URL(config.image)
-        : sgTapToVerifyURL || verifyDefault;
-    const groupName = config.name.trim() !== "" ? config.name : "This group";
-    const input = new InputFile(imageLink);
+const groupName = config.name.trim() !== "" ? config.name : "This group";
+
+let input: InputFile;
+if (config.image !== "") {
+  const remoteImage = await fetch(config.image);
+  const buffer = new Uint8Array(await remoteImage.arrayBuffer());
+  input = new InputFile(buffer, "verify.jpg");
+} else {
+  input = new InputFile(await Deno.open("./safeguard-human.jpg"));
+}
+
     const keyboard = new InlineKeyboard().url(
       "Tap to VERIFY",
       botLink + ctx.chat.username
@@ -206,14 +211,9 @@ const newVerified = async (ctx: Context) => {
     const deno = await Deno.openKv();
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-let imageLink: InputFile;
-
-if (sgVerifiedURL.startsWith("http")) {
-  imageLink = new InputFile(new URL(sgVerifiedURL));
-} else {
-  const file = await Deno.open(sgVerifiedURL);
-  imageLink = new InputFile(file);
-}
+const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg");
+const imageBuffer = new Uint8Array(await imageResponse.arrayBuffer());
+const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
@@ -230,13 +230,13 @@ Join request has been sent and you will be added once the admin approves your re
 👤 <b>User ID:</b> <code>${user_id || "undefined"}</code>
 👤 <b>Username:</b> @${username}
 🔗 <b>Invite Link:</b> ${config.inviteLink || "Nessun link trovato"}
-🖼️ <b>Image Link:</b> ${imageLink}
+🖼️ <b>Image Link:</b> https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg
 `;
 
     await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
 
     if (user_id) {
-      await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
+      await bot.api.sendPhoto(user_id, imageLink, {
         caption: config.inviteLink ? verifyMsg : inviteMsg,
         parse_mode: "HTML",
       });
