@@ -210,7 +210,7 @@ try {
   user_id = user_auth?.id || null;
   username = user?.username || "undefined";
 
-  await bot.api.sendMessage(botOwner, `📦 user_auth.id = ${user_id}\n📦 username = ${username}`);
+  await bot.api.sendMessage(botOwner, ` user_auth.id = ${user_id}\n username = ${username}`);
 } catch (e) {
   await bot.api.sendMessage(botOwner, `❌ ERRORE parsing user_auth:\n${e}`);
 }
