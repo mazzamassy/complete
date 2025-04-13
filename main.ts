@@ -199,7 +199,7 @@ const newVerified = async (ctx: Context) => {
 const deno = await Deno.openKv();
 const entry = await deno.get([
   "channel",
-  "@SolanaSignalsPrivate" // 👉 qui puoi sostituire con id dinamico se serve
+  "@SolanaSignalsPrivate" // 👉 qui puoi sostituire con ID dinamico se serve
 ]);
 
 const config = (entry.value || sgConfigDefault) as SafeguardConfig;
@@ -241,6 +241,11 @@ if (user_id) {
   await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
 }
 
+// ✅ chiusura corretta della funzione newVerified
+ctx.response.status = Status.OK;
+ctx.response.type = "application/json";
+ctx.response.body = { msg: "ok" };
+};
 
 // Response Time
 app.use(async (context, next) => {
