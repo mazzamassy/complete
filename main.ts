@@ -60,10 +60,6 @@ Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safegu
     `${webAppLink}?c=${id}`
   );
 
-console.log("👤 user_auth.id:", user_auth.id);
-console.log("🔗 Invite link:", config.inviteLink);
-console.log("🖼️ Image link:", imageLink);
-
   await bot.api.raw.sendPhoto({
     caption,
     photo: input,
