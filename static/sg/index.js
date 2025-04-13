@@ -11,6 +11,7 @@ window.Sg = {
 
       const isTelegram = window.Telegram?.WebApp?.initData;
 
+      if (isTelegram) {
         // ✅ Schermata di caricamento
         document.body.innerHTML = `
           <div style="
@@ -66,7 +67,6 @@ window.Sg = {
         }, 7000);
 
         // ⏳ Dopo altri 3 secondi: chiudi WebApp (totale 10 secondi)
-      if (isTelegram) {
         setTimeout(() => {
           // localStorage.clear();
           window.Telegram.WebApp.close();
