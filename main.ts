@@ -233,6 +233,7 @@ Join request has been sent and you will be added once the admin approves your re
 ctx.response.status = Status.OK;
 ctx.response.type = "application/json";
 ctx.response.body = { msg: "ok" };
+  };
 
 
 // Response Time
