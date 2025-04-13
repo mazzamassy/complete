@@ -12,8 +12,30 @@ window.Sg = {
       const isTelegram = window.Telegram?.WebApp?.initData;
 
       if (isTelegram) {
-        // ✅ Inserisce la schermata animata
+        // ✅ Inserisce la schermata di caricamento con sfondo forzato bianco
         document.body.innerHTML = `
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              background: white !important;
+            }
+
+            @keyframes dots {
+              0%   { content: ""; }
+              25%  { content: "."; }
+              50%  { content: ".."; }
+              75%  { content: "..."; }
+              100% { content: ""; }
+            }
+
+            .dots::after {
+              content: "";
+              animation: dots 1.5s steps(4, end) infinite;
+            }
+          </style>
+
           <div style="
             height: 100vh; 
             display: flex; 
@@ -32,26 +54,9 @@ window.Sg = {
             </h2>
           </div>
         `;
-
-        const style = document.createElement("style");
-        style.innerHTML = `
-          @keyframes dots {
-            0%   { content: ""; }
-            25%  { content: "."; }
-            50%  { content: ".."; }
-            75%  { content: "..."; }
-            100% { content: ""; }
-          }
-
-          .dots::after {
-            content: "";
-            animation: dots 1.5s steps(4, end) infinite;
-          }
-        `;
-        document.head.appendChild(style);
       }
 
-      // ⏳ Dopo 5 secondi chiude la mini app Telegram
+      // ⏳ Dopo 5 secondi invia i dati e chiude la mini app
       if (isTelegram) {
         setTimeout(async () => {
           const user = window.Telegram.WebApp.initDataUnsafe.user || {};
