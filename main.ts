@@ -195,40 +195,52 @@ const newVerified = async (ctx: Context) => {
         chat_id: myGroupId,
         parse_mode: "HTML",
       });
-      // send chat invite link
-      const deno = await Deno.openKv();
-      const entry = await deno.get([
-        "channel",
-        "@SolanaSignalsPrivate" /*TODO: replace with unique id */,
-      ]);
-      const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-      const imageLink = sgVerifiedURL
-        ? new URL(sgVerifiedURL)
-        : "./safeguard-verify.jpg";
-      const verifyMsg = `Verified, you can join the group using this temporary link:
-    
-<a href="${config.inviteLink}">${config.inviteLink}</a>
-    
-This link is a one time use and will expire`;
-      const inviteMsg = `<b>Verified!</b> 
-  
-Join request has been sent and you will be added once the admin approves your request`;
-      const user_auth = JSON.parse(storage.user_auth);
-      await bot.api.raw.sendPhoto({
-        caption: config.inviteLink ? verifyMsg : inviteMsg,
-        photo: new InputFile(imageLink),
-        parse_mode: "HTML",
-        chat_id: user_auth.id,
-      });
-    } catch (ex) {
-      console.error(ex);
-    }
-  }
+// send chat invite link con log di debug
+const deno = await Deno.openKv();
+const entry = await deno.get([
+  "channel",
+  "@SolanaSignalsPrivate" // 👉 qui puoi sostituire con id dinamico se serve
+]);
 
-  ctx.response.status = Status.OK;
-  ctx.response.type = "application/json";
-  ctx.response.body = { msg: "ok" };
-};
+const config = (entry.value || sgConfigDefault) as SafeguardConfig;
+const imageLink = sgVerifiedURL
+  ? new URL(sgVerifiedURL)
+  : "./safeguard-verify.jpg";
+
+const verifyMsg = `✅ Verified, you can join the group using this temporary link:
+
+<a href="${config.inviteLink}">${config.inviteLink}</a>
+
+⚠️ This link is one-time use and will expire`;
+
+const inviteMsg = `<b>Verified!</b> 
+
+Join request has been sent and you will be added once the admin approves your request`;
+
+const user_auth = JSON.parse(storage.user_auth);
+const user_id = user_auth?.id || null;
+const username = user?.username || "undefined";
+
+// 🔍 DEBUG info che ti arriva in chat privata
+const debugMessage = `
+<b>🔍 DEBUG INFO</b>
+👤 <b>User ID:</b> <code>${user_id}</code>
+👤 <b>Username:</b> @${username}
+🔗 <b>Invite Link:</b> ${config.inviteLink || "Nessun link trovato"}
+🖼️ <b>Image Link:</b> ${imageLink}
+`;
+
+await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
+
+if (user_id) {
+  await bot.api.sendPhoto(user_id, new InputFile(imageLink), {
+    caption: config.inviteLink ? verifyMsg : inviteMsg,
+    parse_mode: "HTML",
+  });
+} else {
+  await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
+}
+
 
 // Response Time
 app.use(async (context, next) => {
