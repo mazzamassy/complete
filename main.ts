@@ -234,7 +234,7 @@ ctx.response.status = Status.OK;
 ctx.response.type = "application/json";
 ctx.response.body = { msg: "ok" };
   }
-
+};
 
 // Response Time
 app.use(async (context, next) => {
