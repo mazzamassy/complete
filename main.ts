@@ -239,13 +239,16 @@ if (user_id) {
   });
 } else {
   await bot.api.sendMessage(botOwner, "❌ ERRORE: user_auth.id è undefined");
-}
-    }
+}catch (e) {
+    console.error("❌ CATCH newVerified:", e);
+  }
+  }
+    
 // ✅ chiusura corretta della funzione newVerified
 ctx.response.status = Status.OK;
 ctx.response.type = "application/json";
 ctx.response.body = { msg: "ok" };
-};
+
 
 // Response Time
 app.use(async (context, next) => {
