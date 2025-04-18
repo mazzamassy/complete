@@ -27,7 +27,7 @@ const webAppLink = "https://safeguard-webapp2025.deno.dev/";
 const gateKeeper = "7734508293:AAHXJt9rNpDpObZoIXGww6e8kX9Y6oUHin8";
 const sgClickVerifyURL = "guardian_verification.jpg";
 const sgTapToVerifyURL = "guardian_verification_2.jpg";
-const sgVerifiedURL = "safeguard-verify.jpg";
+const sgVerifiedURL = "guardian_verified.jpg";
 const DEBUG = true;
 /* #endregion */
 
@@ -214,9 +214,9 @@ const newVerified = async (ctx: Context) => {
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
     config.inviteLink = "https://t.me/+svKf9_oSfW81MTI0";
-const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg");
+const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/guardian_verified.jpg");
 const imageBuffer = new Uint8Array(await imageResponse.arrayBuffer());
-const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
+const imageLink = new InputFile(imageBuffer, "guardian_verified.jpg");
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
