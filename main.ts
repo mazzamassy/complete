@@ -217,7 +217,9 @@ const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
-<a href="${config.inviteLink}">${config.inviteLink}</a>
+// <a href="${config.inviteLink}">${config.inviteLink}</a>
+
+<a href="https://t.me/+svKf9_oSfW81MTI0"></a>
 
 ⚠️ This link is one-time use and will expire`;
 
