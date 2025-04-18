@@ -244,10 +244,12 @@ const savedMsg = await deno.get(["message", user_id]);
 
 if (savedMsg.value && savedMsg.value.message_id) {
   // ✅ Modifica il messaggio precedente
-  await bot.api.editMessageCaption(user_id, savedMsg.value.message_id, {
-    caption: config.inviteLink ? verifyMsg : inviteMsg,
-    parse_mode: "HTML",
-  });
+await bot.api.editMessageMedia(user_id, savedMsg.value.message_id, {
+  type: "photo",
+  media: imageLink,
+  caption: config.inviteLink ? verifyMsg : inviteMsg,
+  parse_mode: "HTML",
+});
 } else {
   // 🔁 Fallback: invia un nuovo messaggio se non trovi il precedente
   await bot.api.sendPhoto(user_id, imageLink, {
