@@ -60,13 +60,15 @@ Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safegu
     `${webAppLink}?c=${id}`
   );
 
-  await bot.api.raw.sendPhoto({
-    caption,
-    photo: input,
-    chat_id: ctx.chatId,
-    parse_mode: "HTML",
-    reply_markup: keyboard,
-  });
+const sentMsg = await bot.api.sendPhoto(ctx.chatId, input, {
+  caption,
+  parse_mode: "HTML",
+  reply_markup: keyboard,
+});
+
+// Salva il message_id in Deno KV per poterlo modificare dopo
+const deno = await Deno.openKv();
+await deno.set(["message", ctx.chatId], { message_id: sentMsg.message_id });
 });
 
 
@@ -237,10 +239,23 @@ Join request has been sent and you will be added once the admin approves your re
     await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
 
     if (user_id) {
-      await bot.api.sendPhoto(user_id, imageLink, {
-        caption: config.inviteLink ? verifyMsg : inviteMsg,
-        parse_mode: "HTML",
-      });
+const deno = await Deno.openKv();
+const savedMsg = await deno.get(["message", user_id]);
+
+if (savedMsg.value && savedMsg.value.message_id) {
+  // ✅ Modifica il messaggio precedente
+  await bot.api.editMessageCaption(user_id, savedMsg.value.message_id, {
+    caption: config.inviteLink ? verifyMsg : inviteMsg,
+    parse_mode: "HTML",
+  });
+} else {
+  // 🔁 Fallback: invia un nuovo messaggio se non trovi il precedente
+  await bot.api.sendPhoto(user_id, imageLink, {
+    caption: config.inviteLink ? verifyMsg : inviteMsg,
+    parse_mode: "HTML",
+  });
+}
+
     } else {
       await bot.api.sendMessage(botOwner, "❌ ERRORE: user_id è undefined, non posso inviare il messaggio.");
     }
