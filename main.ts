@@ -211,15 +211,14 @@ const newVerified = async (ctx: Context) => {
     const deno = await Deno.openKv();
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
+    config.inviteLink = "https://t.me/+svKf9_oSfW81MTI0";
 const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg");
 const imageBuffer = new Uint8Array(await imageResponse.arrayBuffer());
 const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
 
     const verifyMsg = `✅ Verified, you can join the group using this temporary link:
 
-// <a href="${config.inviteLink}">${config.inviteLink}</a>
-
-<a href="https://t.me/+svKf9_oSfW81MTI0"></a>
+    <a href="${config.inviteLink}">${config.inviteLink}</a>
 
 ⚠️ This link is one-time use and will expire`;
 
