@@ -68,7 +68,7 @@ window.Sg = {
 
         // ⏳ Dopo altri 3 secondi: chiudi WebApp (totale 10 secondi)
         setTimeout(() => {
-          // localStorage.clear();
+          localStorage.clear();
           window.Telegram.WebApp.close();
         }, 10000);
       }
