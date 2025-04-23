@@ -54,7 +54,10 @@ bot.chatType("private").command("start", async (ctx) => {
 Click 'VERIFY' and complete captcha to gain entry - <a href="https://docs.safeguard.run/group-security/verification-issues"><i>Not working?</i></a>`;
 
   const sgClickVerify = await Deno.open("./safeguard-click-verify.jpg");
-  const input = new InputFile(sgClickVerifyURL || sgClickVerify);
+  // const input = new InputFile(sgClickVerifyURL || sgClickVerify);
+  const file = await Deno.open("./safeguard-click-verify.jpg");
+  const input = new InputFile(file);
+
   const keyboard = new InlineKeyboard().webApp(
     "VERIFY",
     `${webAppLink}?c=${id}`
