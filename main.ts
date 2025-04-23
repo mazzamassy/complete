@@ -319,10 +319,12 @@ app.use(async (ctx: Context) => {
   if (s.length !== 1) {
     index = s[s.length - 1];
   }
-  if (path === "tg-webhook") {
-    const handleBotUpdate = webhookCallback(bot, "oak");
-    await handleBotUpdate(ctx);
-  } else if (path === "new-verified") {
+  // if (path === "tg-webhook") {
+  //   const handleBotUpdate = webhookCallback(bot, "oak");
+  //   await handleBotUpdate(ctx);
+  // } 
+  
+  else if (path === "new-verified") {
     await newVerified(ctx);
   } else if (path.includes("sg")) {
     await ctx.send({
